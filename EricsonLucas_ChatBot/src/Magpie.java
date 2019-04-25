@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A program to carry on conversations with a human user.
  * This is the initial version that:  
@@ -22,6 +25,13 @@ public class Magpie
 		return "Hello, let's talk.";
 	}
 	
+	public String getResponseArray(String statement)
+	{
+		String response = "";
+		List<String> inputs = new ArrayList<String>("no");
+		List<String> outputs;
+		return response;
+	}
 	/**
 	 * Gives a response to a user statement
 	 * 
@@ -48,8 +58,7 @@ public class Magpie
 						|| findKeyword(statement, "pet") >= 0
 						|| findKeyword(statement, "horse") >= 0) {
 					response = "Tell me more about your pets.";
-				} else if (findKeyword(statement, "meth") >= 0 
-						|| findKeyword(statement, "Seth") >= 0
+				} else if (findKeyword(statement, "Seth") >= 0
 						|| findKeyword(statement, "watgen") >= 0) {
 
 					response = "Oh Seth loves prison!";
@@ -84,13 +93,11 @@ public class Magpie
 					response = "Why do you like " + temp + "?";
 					whyLike = true;
 				} else {
-					response = getRandomResponse();
-				}
-			} else {
 				response = "Please enter something!";
 			}
-			return response;
 		}
+			return response;
+	}
 
 		/**
 		 * Search for one word in phrase. The search is not case
@@ -206,5 +213,101 @@ public class Magpie
 
 			return response;
 		}
+		
+		/**
+		 * Take a statement with "I want to <something>." and transform it into 
+		 * "What would it mean to <something>?"
+		 * @param statement the user statement, assumed to contain "I want to"
+		 * @return the transformed statement
+		 */
+		private String transformIWantToStatement(String statement)
+		{
+			//  Remove the final period, if there is one
+			statement = statement.trim();
+			String lastChar = statement.substring(statement
+					.length() - 1);
+			if (lastChar.equals("."))
+			{
+				statement = statement.substring(0, statement
+						.length() - 1);
+			}
+			int psn = findKeyword (statement, "I want to", 0);
+			String restOfStatement = statement.substring(psn + 9).trim();
+			return "What would it mean to " + restOfStatement + "?";
+		}
+
+		
+		/**
+		 * Take a statement with "I want <something>." and transform it into 
+		 * "Would you really be happy if you had <something>?"
+		 * @param statement the user statement, assumed to contain "I want"
+		 * @return the transformed statement
+		 */
+		private String transformIWantStatement(String statement)
+		{
+			//  Remove the final period, if there is one
+			statement = statement.trim();
+			String lastChar = statement.substring(statement
+					.length() - 1);
+			if (lastChar.equals("."))
+			{
+				statement = statement.substring(0, statement
+						.length() - 1);
+			}
+			int psn = findKeyword (statement, "I want", 0);
+			String restOfStatement = statement.substring(psn + 6).trim();
+			return "Would you really be happy if you had " + restOfStatement + "?";
+		}
+		
+		/**
+		 * Take a statement with "you <something> me" and transform it into 
+		 * "What makes you think that I <something> you?"
+		 * @param statement the user statement, assumed to contain "you" followed by "me"
+		 * @return the transformed statement
+		 */
+		private String transformYouMeStatement(String statement)
+		{
+			//  Remove the final period, if there is one
+			statement = statement.trim();
+			String lastChar = statement.substring(statement
+					.length() - 1);
+			if (lastChar.equals("."))
+			{
+				statement = statement.substring(0, statement
+						.length() - 1);
+			}
+			
+			int psnOfYou = findKeyword(statement, "you", 0);
+			int psnOfMe = findKeyword(statement, "me", psnOfYou + 3);
+			
+			String restOfStatement = statement.substring(psnOfYou + 3, psnOfMe).trim();
+			return "What makes you think that I " + restOfStatement + " you?";
+		}
+		
+		/**
+		 * Take a statement with "I <something> you" and transform it into 
+		 * "Why do you <something> me?"
+		 * @param statement the user statement, assumed to contain "I" followed by "you"
+		 * @return the transformed statement
+		 */
+		private String transformIYouStatement(String statement)
+		{
+			//  Remove the final period, if there is one
+			statement = statement.trim();
+			String lastChar = statement.substring(statement
+					.length() - 1);
+			if (lastChar.equals("."))
+			{
+				statement = statement.substring(0, statement
+						.length() - 1);
+			}
+			
+			int psnOfI = findKeyword(statement, "I", 0);
+			int psnOfYou = findKeyword(statement, "you", psnOfI);
+			
+			String restOfStatement = statement.substring(psnOfI + 1, psnOfYou).trim();
+			return "Why do you " + restOfStatement + " me?";
+		}
 
 	}
+
