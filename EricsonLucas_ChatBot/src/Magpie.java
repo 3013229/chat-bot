@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -15,6 +16,11 @@ import java.util.List;
  */
 public class Magpie
 {
+	List<String> inputs = new ArrayList<String>();
+	List<String> outputs = new ArrayList<String>();
+	File inputFile = new File("Keywords");
+	FileReader freader = new FileReader("Keywords");
+	istream = new FileInputStream(inputFile);
 	boolean whyLike = false;
 	/**
 	 * Get a default greeting 	
@@ -28,8 +34,14 @@ public class Magpie
 	public String getResponseArray(String statement)
 	{
 		String response = "";
-		List<String> inputs = new ArrayList<String>("no");
-		List<String> outputs;
+		
+		for (int i = 0; i < inputs.size(); i++)
+		{
+			if (statement.equals(inputs.get(i)))
+			{
+				response = outputs.get(i);
+			}
+		}
 		return response;
 	}
 	/**
