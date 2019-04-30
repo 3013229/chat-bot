@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -10,8 +11,9 @@ public class MagpieRunner
 
 	/**
 	 * Create a Magpie, give it user input, and print its replies.
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws FileNotFoundException
 	{
 		Magpie maggie = new Magpie();
 		
@@ -21,7 +23,7 @@ public class MagpieRunner
 		
 		while (!statement.equals("Bye"))
 		{
-			System.out.println (maggie.getResponse(statement));
+			System.out.println (maggie.getResponse2(statement));
 			statement = in.nextLine();
 		}
 	}

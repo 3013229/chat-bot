@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.io.*;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * A program to carry on conversations with a human user.
@@ -14,14 +15,18 @@ import java.util.List;
  * @author Laurie White
  * @version April 2012
  */
-public class Magpie
+public class Magpie 
 {
 	List<String> inputs = new ArrayList<String>();
 	List<String> outputs = new ArrayList<String>();
-	File inputFile = new File("Keywords");
-	FileReader freader = new FileReader("Keywords");
-	istream = new FileInputStream(inputFile);
+	File keyFile = new File("Keywords.txt");
+	File repFile = new File("Responses.txt");
+	Scanner keyScanner = new Scanner(keyFile);
+	Scanner repScanner = new Scanner(repFile);
 	boolean whyLike = false;
+	
+	public Magpie() throws FileNotFoundException {}
+	
 	/**
 	 * Get a default greeting 	
 	 * @return a greeting
@@ -29,6 +34,22 @@ public class Magpie
 	public String getGreeting()
 	{
 		return "Hello, let's talk.";
+	}
+	
+	public String getResponse2(String statement)
+	{
+		String tempKey = "";
+		String tempRep = "";
+		while (keyScanner.hasNextLine())
+		{
+			tempKey = keyScanner.nextLine();
+			tempRep = repScanner.nextLine();
+			if (statement.equals(tempKey))
+			{
+				return tempRep;
+			}
+		}
+		return tempRep;
 	}
 	
 	public String getResponseArray(String statement)
