@@ -17,12 +17,8 @@ import java.util.Scanner;
  */
 public class Magpie 
 {
-	List<String> inputs = new ArrayList<String>();
-	List<String> outputs = new ArrayList<String>();
 	File keyFile = new File("Keywords.txt");
 	File repFile = new File("Responses.txt");
-	Scanner keyScanner = new Scanner(keyFile);
-	Scanner repScanner = new Scanner(repFile);
 	boolean whyLike = false;
 	
 	public Magpie() throws FileNotFoundException {}
@@ -36,35 +32,6 @@ public class Magpie
 		return "Hello, let's talk.";
 	}
 	
-	public String getResponse2(String statement)
-	{
-		String tempKey = "";
-		String tempRep = "";
-		while (keyScanner.hasNextLine())
-		{
-			tempKey = keyScanner.nextLine();
-			tempRep = repScanner.nextLine();
-			if (statement.equals(tempKey))
-			{
-				return tempRep;
-			}
-		}
-		return tempRep;
-	}
-	
-	public String getResponseArray(String statement)
-	{
-		String response = "";
-		
-		for (int i = 0; i < inputs.size(); i++)
-		{
-			if (statement.equals(inputs.get(i)))
-			{
-				response = outputs.get(i);
-			}
-		}
-		return response;
-	}
 	/**
 	 * Gives a response to a user statement
 	 * 
@@ -72,64 +39,49 @@ public class Magpie
 	 *            the user statement
 	 * @return a response based on the rules given
 	 */
-	public String getResponse(String statement)
+	public String getResponse(String statement) throws FileNotFoundException
 	{
-			String response = "";
-			if (statement.trim().length() > 0) {
-				if (whyLike) {
-					response = "I couldn't agree more!";
-					whyLike = false;
-				} else if (statement.indexOf("no") >= 0) {
-					response = "Why so negative?";
-				} else if (findKeyword(statement, "mother") >= 0 
-						|| findKeyword(statement, "father") >= 0
-						|| findKeyword(statement, "sister") >= 0 
-						|| findKeyword(statement, "brother") >= 0) {
-					response = "Tell me more about your family.";
-				} else if (findKeyword(statement, "dog") >= 0 
-						|| findKeyword(statement, "cat") >= 0 
-						|| findKeyword(statement, "pet") >= 0
-						|| findKeyword(statement, "horse") >= 0) {
-					response = "Tell me more about your pets.";
-				} else if (findKeyword(statement, "Seth") >= 0
-						|| findKeyword(statement, "watgen") >= 0) {
-
-					response = "Oh Seth loves prison!";
-				} else if (findKeyword(statement, "Mrs. O") >= 0 
-						|| findKeyword(statement, "Mrs. O'Laughlin") >= 0
-						|| findKeyword(statement, "teacher") >= 0) {
-
-					response = "Your teacher sounds very nice!";
-				} else if (findKeyword(statement, "Fortnite") >= 0 
-						|| findKeyword(statement, "fortnite") >= 0
-						|| findKeyword(statement, "ninja") >= 0) {
-
-					response = "Fortnite is so EPIC!! Let's get some vicroys!";
-				} else if (findKeyword(statement, "Mrs. O") >= 0 
-						|| findKeyword(statement, "Mrs. O'Laughlin") >= 0
-						|| findKeyword(statement, "teacher") >= 0) {
-
-					response = "Your teacher sounds very fun!";
-				} else if (findKeyword(statement, "Panera") >= 0 
-						|| findKeyword(statement, "work") >= 0
-						|| findKeyword(statement, "job") >= 0) {
-
-					response = "What do you do for work?";
-				} else if (findKeyword(statement, "I like") >= 0) {
-					String temp = " ";
-					int i = statement.length() - 1;
-					while (!(statement.substring(i, i+1).equals(" ")))
+		Scanner keyScanner = new Scanner(keyFile);
+		Scanner repScanner = new Scanner(repFile);
+		String tempKey = "";
+		String tempRep = "";
+		while (keyScanner.hasNextLine())
+		{
+			tempKey = keyScanner.nextLine();
+			tempRep = repScanner.nextLine();
+			
+			if (findKeyword(statement, tempKey) >= 0)
+			{
+				String trigger = tempRep.substring(0,1);
+				String method = tempRep.substring(1);
+				
+				if (trigger.equals("%"))
+				{
+					
+					switch (method)
 					{
-						i--;
+						case "like": return iLikeMethod(statement);
 					}
-					temp = statement.substring(i+1);
-					response = "Why do you like " + temp + "?";
-					whyLike = true;
 				} else {
-				response = "Please enter something!";
+					return tempRep;
+				}
 			}
 		}
-			return response;
+		keyScanner.close();
+		repScanner.close();
+		return "I don't understand";
+	}
+	
+	private String iLikeMethod(String statement)
+	{
+		String temp = " ";
+		int i = statement.length() - 1;
+		while (!(statement.substring(i, i+1).equals(" ")))
+		{
+			i--;
+		}
+		temp = statement.substring(i+1);
+		return "Why do you like " + temp + "?";
 	}
 
 		/**
