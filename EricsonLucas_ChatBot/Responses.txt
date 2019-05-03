@@ -14,3 +14,5 @@ I work at Panera, it is depressing, how is your job?
 I work at Panera, it is depressing, how is your job?
 I work at Panera, it is depressing, how is your job?
 %like
+%want
+%wantTo

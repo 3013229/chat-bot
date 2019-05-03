@@ -45,31 +45,50 @@ public class Magpie
 		Scanner repScanner = new Scanner(repFile);
 		String tempKey = "";
 		String tempRep = "";
-		while (keyScanner.hasNextLine())
-		{
-			tempKey = keyScanner.nextLine();
-			tempRep = repScanner.nextLine();
-			
-			if (findKeyword(statement, tempKey) >= 0)
+		String firstWord = "";
+		String secondWord = "";
+		try {
+			while (keyScanner.hasNextLine())
 			{
-				String trigger = tempRep.substring(0,1);
-				String method = tempRep.substring(1);
-				
-				if (trigger.equals("%"))
+				tempKey = keyScanner.nextLine();
+				tempRep = repScanner.nextLine();
+				int psn = findKeyword(statement, "you", 0);
+
+				if (psn >= 0 && findKeyword(statement, "me", psn) >= 0)
 				{
-					
-					switch (method)
-					{
-						case "like": return iLikeMethod(statement);
-					}
+					return youMeMethod(statement);
 				} else {
-					return tempRep;
+					psn = findKeyword(statement, "i", 0);
+					if (psn >= 0 && findKeyword(statement, "you", psn) >= 0)
+					{
+					return iYouMethod(statement);
+					}
+				}
+				if (findKeyword(statement, tempKey) >= 0)
+				{
+					String trigger = tempRep.substring(0,1);
+					String method = tempRep.substring(1);
+				
+					if (trigger.equals("%"))
+					{
+					
+						switch (method)
+						{
+							case "like": return iLikeMethod(statement);
+							case "want": return iWantMethod(statement);
+							case "wantTo": return iWantToMethod(statement);
+						}
+					} else {
+						return tempRep;
+					}
 				}
 			}
+		} catch (Exception e) {
+			System.out.println("I don't understand :(");
 		}
 		keyScanner.close();
 		repScanner.close();
-		return "I don't understand";
+		return "";
 	}
 	
 	private String iLikeMethod(String statement)
@@ -205,7 +224,7 @@ public class Magpie
 		 * @param statement the user statement, assumed to contain "I want to"
 		 * @return the transformed statement
 		 */
-		private String transformIWantToStatement(String statement)
+		private String iWantToMethod(String statement)
 		{
 			//  Remove the final period, if there is one
 			statement = statement.trim();
@@ -228,7 +247,7 @@ public class Magpie
 		 * @param statement the user statement, assumed to contain "I want"
 		 * @return the transformed statement
 		 */
-		private String transformIWantStatement(String statement)
+		private String iWantMethod(String statement)
 		{
 			//  Remove the final period, if there is one
 			statement = statement.trim();
@@ -250,7 +269,7 @@ public class Magpie
 		 * @param statement the user statement, assumed to contain "you" followed by "me"
 		 * @return the transformed statement
 		 */
-		private String transformYouMeStatement(String statement)
+		private String youMeMethod(String statement)
 		{
 			//  Remove the final period, if there is one
 			statement = statement.trim();
@@ -275,7 +294,7 @@ public class Magpie
 		 * @param statement the user statement, assumed to contain "I" followed by "you"
 		 * @return the transformed statement
 		 */
-		private String transformIYouStatement(String statement)
+		private String iYouMethod(String statement)
 		{
 			//  Remove the final period, if there is one
 			statement = statement.trim();
