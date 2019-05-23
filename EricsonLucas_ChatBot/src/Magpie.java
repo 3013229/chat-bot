@@ -88,7 +88,7 @@ public class Magpie
 		}
 		keyScanner.close();
 		repScanner.close();
-		return "";
+		return "Hmmm...";
 	}
 	
 	private String iLikeMethod(String statement)
